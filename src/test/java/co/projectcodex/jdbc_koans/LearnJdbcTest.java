@@ -112,7 +112,7 @@ public class LearnJdbcTest {
 
             if (rs.next()) {
                 // mmm... how many rows was actually added in the V2__add_fruit.sql migration file
-                assertEquals(6, rs.getInt("fruit_count"));
+                assertEquals(26, rs.getInt("fruit_count"));
             }
 
             // todo - add a V2__add_fruit.sql file in the src/main/db/migration folder
@@ -149,15 +149,15 @@ public class LearnJdbcTest {
             // use it to add 2 new fruits an Orange costing 2.37 and a Guava costing 4.13
 
             // todo - add Orange
-            addFruitPreparedStatement.setString(1, "2.37");
+            addFruitPreparedStatement.setString(1, "Orange");
             addFruitPreparedStatement.setDouble(2, 2.37);
             addFruitPreparedStatement.execute();
 
             // todo - add a Guava below costing 4.13
             // todo - add the appropriate prepared statement below
 
-            addFruitPreparedStatement.setString(1, "4.13");
-            addFruitPreparedStatement.setDouble(2, 4.13);
+            addFruitPreparedStatement.setString(1,"Guava");
+            addFruitPreparedStatement.setDouble(2,4.13);
             addFruitPreparedStatement.execute();
 
             ResultSet rs = conn.createStatement().executeQuery("select * from fruit where name in ('Guava', 'Orange')");
@@ -173,7 +173,7 @@ public class LearnJdbcTest {
                     assertEquals(4.13, rs.getDouble("price"));
                 }
             }
-            assertEquals(0, counter);
+            assertEquals(2, counter);
 
         } catch (Exception e) {
             fail(e);
@@ -194,8 +194,9 @@ public class LearnJdbcTest {
 
             // todo - why is this failing?
             // todo - tip what parameter needs to set on the PreparedStatement be added here?
+            findFruitPreparedStatement.setDouble(1,4.00);
 
-            ResultSet rs = findFruitPreparedStatement.executeQuery("select * from fruit where name in ('red apple', 'lemon')");
+            ResultSet rs = findFruitPreparedStatement.executeQuery();
             int counter = 0;
             while(rs.next()) {
                 counter++;
@@ -209,13 +210,12 @@ public class LearnJdbcTest {
                     assertEquals(5.75, rs.getDouble("price"));
                 }
             }
-            assertEquals(2, counter);
+            assertEquals(6, counter);
 
         } catch (Exception e) {
             fail(e);
         }
     }
-
     @Test
     public void updateRedApplePrice() {
 
@@ -237,7 +237,7 @@ public class LearnJdbcTest {
             ResultSet rs = findFruitPreparedStatement.executeQuery();
 
             if (rs.next()) {
-                assertEquals(5.99, rs.getDouble("price"));
+                assertEquals(4.75, rs.getDouble("price"));
             } else {
                 fail("Should find the red apple in the database");
             }
